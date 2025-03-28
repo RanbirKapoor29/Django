@@ -1,0 +1,165 @@
+
+
+In Django, a template is an HTML file that contains static content along with dynamic placeholders (template tags and filters) that Django can replace when rendering the page. 
+Templates are used to separate presentation (UI) from business logic, making the code more maintainable.
+
+🔹 Key Features of Django Templates
+HTML with Django Template Language (DTL)
+
+You can use Django’s template syntax ({{ }} for variables and {% %} for logic).
+
+Separation of Concerns
+
+Keeps HTML separate from Python logic (MVC architecture).
+
+Reusable Components
+
+Supports template inheritance (extends, block) to reuse layouts.
+
+Filters and Tags
+
+Filters modify variables, e.g., {{ name|upper }} → converts name to uppercase.
+
+Tags provide logic control, e.g., {% for item in items %}...{% endfor %}.
+
+🔹 Using Templates in Django
+1️⃣ Create a Template File
+Templates are usually stored in a templates/ directory inside a Django app.
+
+📌 Example: myapp/templates/index.html
+
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Django Page</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <p>Today’s date is {{ today|date:"D, M d Y" }}</p>
+
+    {% if is_logged_in %}
+        <p>You are logged in.</p>
+    {% else %}
+        <p>Please log in.</p>
+    {% endif %}
+</body>
+</html>
+2️⃣ Load and Render the Template in a View
+In views.py, you can render a template using Django’s render() function.
+
+📌 Example: views.py
+
+python
+Copy
+Edit
+from django.shortcuts import render
+from datetime import datetime
+
+def home(request):
+    context = {
+        "username": "Giridhar",
+        "today": datetime.now(),
+        "is_logged_in": True
+    }
+    return render(request, "index.html", context)
+3️⃣ Configure Templates in settings.py
+Ensure Django knows where to find templates.
+
+📌 Example: settings.py
+
+python
+Copy
+Edit
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "templates"],  # Look for templates in the 'templates' folder
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+            ],
+        },
+    },
+]
+🔹 Advanced Template Features
+1️⃣ Template Inheritance
+You can create a base template and extend it in other templates.
+
+📌 Example: base.html
+
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Site{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>My Website</h1>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>Copyright 2025</p>
+    </footer>
+</body>
+</html>
+📌 Example: home.html (Extending base.html)
+
+html
+Copy
+Edit
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <h2>Welcome to the homepage!</h2>
+    <p>Enjoy browsing.</p>
+{% endblock %}
+2️⃣ Template Filters
+Django provides built-in filters to modify variables.
+
+📌 Examples of Filters
+
+html
+Copy
+Edit
+<p>Uppercase: {{ username|upper }}</p> <!-- Converts to uppercase -->
+<p>First 5 characters: {{ message|slice:":5" }}</p> <!-- Slices string -->
+<p>Formatted Date: {{ today|date:"Y-m-d" }}</p> <!-- Formats date -->
+3️⃣ Template Tags
+Django template tags allow control structures (loops, conditions, etc.).
+
+📌 Example: {% for %} Loop
+
+html
+Copy
+Edit
+<ul>
+    {% for item in items %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li>No items found.</li>
+    {% endfor %}
+</ul>
+📌 Example: {% if %} Condition
+
+html
+Copy
+Edit
+{% if is_admin %}
+    <p>Welcome, Admin!</p>
+{% else %}
+    <p>Welcome, User!</p>
+{% endif %}
