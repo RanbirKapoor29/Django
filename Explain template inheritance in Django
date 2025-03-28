@@ -1,0 +1,91 @@
+Template Inheritance in Django
+Template inheritance in Django allows you to create a base template with a common structure and extend it in other templates. This makes it easy to maintain a consistent layout across multiple pages while allowing individual templates to customize specific sections.
+
+1. How Template Inheritance Works
+Django uses the {% block %} and {% extends %} template tags to implement inheritance.
+
+Base Template (base.html)
+A base template contains the common layout (e.g., header, footer, navigation bar). It defines blocks that child templates can override.
+
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Default Title{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>My Website</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about/">About</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}
+        <p>Default content goes here.</p>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Website</p>
+    </footer>
+</body>
+</html>
+Child Template (home.html)
+The child template extends the base template and overrides the blocks.
+
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <h2>Welcome to the Home Page</h2>
+    <p>This is the content of the home page.</p>
+{% endblock %}
+2. How Django Renders Templates
+When a view returns render(request, "home.html"), Django:
+
+Loads home.html, sees {% extends "base.html" %}, and loads base.html.
+
+Fills in {% block content %} from home.html inside the corresponding block in base.html.
+
+Returns the final rendered HTML to the user.
+
+3. Advantages of Template Inheritance
+Code Reusability – Avoid duplicating common HTML structures.
+Consistency – Keep the same layout across all pages.
+Easier Maintenance – Update the base template to reflect changes across all pages.
+
+4. Nested Template Inheritance
+You can have multiple levels of inheritance. For example:
+
+base.html (global layout)
+
+base_dashboard.html (extends base.html for dashboard-specific pages)
+
+dashboard_home.html (extends base_dashboard.html)
+
+Example:
+
+html
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+    <h2>Dashboard Home</h2>
+    <p>Welcome to your dashboard!</p>
+{% endblock %}
+5. Using {% include %} vs {% extends %}
+{% extends %} is for inheritance (child template replaces blocks in the base template).
+
+{% include %} is for reusing smaller template components (e.g., navbar, sidebar).
+
+Example of {% include %}:
+
+html
+{% include "navbar.html" %}
