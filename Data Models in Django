@@ -1,0 +1,97 @@
+Data Models in Django
+In Django, data models are Python classes that define the structure and behavior of database tables. They act as the bridge between Django applications and the database, making it easier to manage and manipulate data.
+
+1. What is a Django Model?
+A Django model is a subclass of django.db.models.Model that defines:
+
+The fields (columns) of the database table.
+
+The relationships between tables.
+
+Any metadata related to the table.
+
+Django's Object-Relational Mapping (ORM) automatically converts these Python classes into database tables.
+
+2. Defining a Model in Django
+A basic model is defined using Python classes inside models.py in a Django app.
+
+Example:
+python
+Copy
+Edit
+from django.db import models
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    email = models.EmailField(unique=True)
+    enrollment_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+Explanation:
+name = models.CharField(max_length=100): Defines a character field with a max length of 100.
+
+age = models.IntegerField(): Defines an integer field.
+
+email = models.EmailField(unique=True): Ensures the email is unique.
+
+enrollment_date = models.DateField(auto_now_add=True): Automatically sets the field to the current date when the object is created.
+
+__str__: Defines how the object is represented as a string.
+
+3. Common Django Model Fields
+Django provides various field types, including:
+
+Field Type	Description
+CharField	String with max length
+IntegerField	Stores integers
+FloatField	Stores floating-point numbers
+BooleanField	Stores True/False values
+DateField	Stores dates
+DateTimeField	Stores date and time
+EmailField	Stores email addresses
+ForeignKey	Defines a one-to-many relationship
+ManyToManyField	Defines a many-to-many relationship
+4. Model Relationships
+Django models support relationships between tables:
+
+One-to-One Relationship
+
+python
+Copy
+Edit
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField()
+One-to-Many Relationship
+
+python
+Copy
+Edit
+class Book(models.Model):
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+Many-to-Many Relationship
+
+python
+Copy
+Edit
+class Student(models.Model):
+    courses = models.ManyToManyField(Course)
+5. Running Migrations
+Once a model is created, Django needs to apply the changes to the database.
+
+Steps to Apply Migrations
+Create migration files:
+
+sh
+Copy
+Edit
+python manage.py makemigrations
+Apply migrations:
+
+sh
+Copy
+Edit
+python manage.py migrate
